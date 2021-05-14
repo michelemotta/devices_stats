@@ -8,10 +8,12 @@
 #include <unistd.h>
 
 #include "Server.h"
+#include "Message.h"
 
 Server::Server():
-        fdmax(0),
-        socket_listener(0)
+        fd_max(0),
+        socket_listener(0),
+        callback(NULL)
 {
 
 }
@@ -21,8 +23,13 @@ Server::~Server()
     
 }
 
-void Server::init(int port)
+void Server::init(int port, std::function<void(std::string&)> received_data)
 {
+    if(NULL != received_data)
+    {
+        callback = received_data;
+    }
+
     FD_ZERO(&master_fds);
     FD_ZERO(&read_fds);
 
@@ -42,7 +49,7 @@ void Server::init(int port)
     struct sockaddr_in my_addr;
     my_addr.sin_family = AF_INET;
     my_addr.sin_addr.s_addr = INADDR_ANY;
-    my_addr.sin_port = htons(PORT);
+    my_addr.sin_port = htons(port);
     memset(&(my_addr.sin_zero), '\0', 8);
     if(bind(socket_listener, (struct sockaddr *)&my_addr, sizeof(my_addr)) == -1)
     {
@@ -58,7 +65,7 @@ void Server::init(int port)
 
     FD_SET(socket_listener, &master_fds);
 
-    fdmax = socket_listener;
+    fd_max = socket_listener;
     
 }
 
@@ -69,15 +76,15 @@ void Server::listen_connections()
     std::cout << "Listening for connections" << std::endl;
 
     //Waiting only for incoming data and/or connections
-    if(select((fdmax + 1), &read_fds, NULL, NULL, NULL) == -1)
+    if(select((fd_max + 1), &read_fds, NULL, NULL, NULL) == -1)
     {
         perror("Error: select failed");
         std::exit(1);
     }
 
-    std::cout << "Somethig happened" << std::endl;   
+    std::cout << "Something happened" << std::endl;   
 
-    for(int i = 0; i <= fdmax; i++) 
+    for(int i = 0; i <= fd_max; i++) 
     {
         if(FD_ISSET(i, &read_fds))
         {
@@ -109,9 +116,9 @@ void Server::new_connection(fd_set& master, int& socket)
     else
     {
         FD_SET(new_fd, &master);
-        if (new_fd > fdmax)
+        if (new_fd > fd_max)
         {
-            fdmax = new_fd;
+            fd_max = new_fd;
         }
         
         std::cout << "New connection from " << inet_ntoa(remoteaddr.sin_addr) <<
@@ -142,10 +149,16 @@ void Server::read(fd_set& master, int& socket)
     }
     else
     {
-        const std::string response_message = "Data received. Thank you!";
+        const std::string response_message = "Data received. Thank you!\r\n";
         if (send(socket, response_message.c_str(), response_message.size(), 0) == -1)
         {
             perror("Error sending response to client!");
+        }
+
+        if(NULL != callback)
+        {
+            std::string buffer_str(buffer);
+            callback(buffer_str);
         }
 
     }

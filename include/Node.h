@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "Storage.h"
+
 class Node
 {
 public:
@@ -11,7 +13,10 @@ public:
 
     void init(void);
     void run(void);
-    void new_message(std::string);
+    void new_message(std::string& buffer);
+
+private:
+    Storage storage;
 
 };
 
