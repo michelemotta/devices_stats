@@ -5,7 +5,8 @@
 #include "Server.h"
 #include "Message.h"
 
-Node::Node()
+Node::Node():
+    storage(NULL)
 {
 
 }
@@ -15,9 +16,14 @@ Node::~Node()
     
 }
 
-void Node::init(void)
+void Node::init(Storage* const store)
 {
     std::cout << "Hello! Node is ready to collect data..." << std::endl;
+
+    if(NULL != store)
+    {
+        storage = store;
+    }
 }
 
 void Node::run(void)
@@ -41,9 +47,13 @@ void Node::new_message(std::string& buffer)
     Message message;
     if(Validator::VALID_MESSAGE == validator.validate_and_parse(buffer, message))
     {
-        storage.store(message);
-        storage.print_stats();
-        //storage.print_id_stats();
+        if(NULL != storage)
+        {
+            storage->store(message);
+            storage->print_stats();
+            //Print sorted data
+            //storage.print_id_stats();
+        }
     }
     else
     {

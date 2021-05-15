@@ -12,12 +12,12 @@ public:
     Node();
     ~Node();
 
-    void init(void);
+    void init(Storage* const store);
     void run(void);
     void new_message(std::string& buffer);
 
 private:
-    Storage storage;
+    Storage* storage;
     Validator validator;
 
 };
