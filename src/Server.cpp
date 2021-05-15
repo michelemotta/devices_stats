@@ -73,16 +73,12 @@ void Server::listen_connections()
 {
     read_fds = master_fds;
 
-    std::cout << "Listening for connections" << std::endl;
-
     //Waiting only for incoming data and/or connections
     if(select((fd_max + 1), &read_fds, NULL, NULL, NULL) == -1)
     {
         perror("Error: select failed");
         std::exit(1);
     }
-
-    std::cout << "Something happened" << std::endl;   
 
     for(int i = 0; i <= fd_max; i++) 
     {

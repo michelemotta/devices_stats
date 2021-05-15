@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Storage.h"
+#include "Validator.h"
 
 class Node
 {
@@ -17,6 +18,7 @@ public:
 
 private:
     Storage storage;
+    Validator validator;
 
 };
 

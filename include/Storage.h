@@ -66,10 +66,16 @@ public:
 
     void print_stats()
     {
+        std::cout << "Stats summary" << std::endl;
+        std::cout << "Device ID : Tot messages" << std::endl;
+        std::cout << std::string(20, '-') << std::endl;
+
         for(std::vector<Item>::iterator it = collection.begin(); it < collection.end(); ++it)
         {
-            std::cout << it->get_id() << " : " << it->get_count() << std::endl <<std::endl;
+            std::cout << it->get_id() << " : " << it->get_count() <<std::endl;
         }
+
+        std::cout << std::string(20, '-') << std::endl << std::endl;
     };
 
 private:

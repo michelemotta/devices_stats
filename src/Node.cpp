@@ -33,15 +33,21 @@ void Node::run(void)
 void Node::new_message(std::string& buffer)
 {
     //New message could be handled by a new thread
-    std::cout << buffer << std::endl;
+    //std::cout << buffer << std::endl;
 
-    //Message message;
-    //parser.validate_and_parse(message);
+    //Remove end of line if any
     buffer.erase(std::remove(buffer.begin(), buffer.end(), '\n'), buffer.end());
 
-    Message message(buffer, std::string());
-    storage.store(message);
-    storage.print_stats();
-    //storage.print_id_stats();
+    Message message;
+    if(Validator::VALID_MESSAGE == validator.validate_and_parse(buffer, message))
+    {
+        storage.store(message);
+        storage.print_stats();
+        //storage.print_id_stats();
+    }
+    else
+    {
+        std::cout << "Wrong formatted message received. Discarded." << std::endl;
+    }
 
 }
