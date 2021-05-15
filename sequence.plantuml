@@ -1,0 +1,19 @@
+@startuml
+actor Device as Device
+queue Server as Server
+control Node as Node
+entity Validator as Validator
+database Storage as Storage
+
+Device -> Server : New message from device
+Server -> Node : Callback, new data!
+Node -> Validator : is valid?
+
+alt Valid Message
+Validator -> Node : Valid Message
+Node -> Storage: store data
+Node -> Storage: print updated statistics
+else
+Validator -> Node : Bad Message
+end
+@enduml
