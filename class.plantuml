@@ -1,0 +1,76 @@
+@startuml
+IServer <|.. Server
+Node --* Server
+Node --* Validator
+Storage o-- Node
+Validator -- Message
+Storage -- Message
+Storage "1" --* "*" Item: contains
+
+class Node
+{
+Storage* storage
+Validator validator
+init(Server* const)
+run()
+new_message(std::string&)
+}
+
+class Server
+{
+-fd_set master_fds;
+-fd_set read_fds;
+-int fd_max;
+-int socket_listener;
+
+std::function<void(std::string&)> callback;
+void new_connection(fd_set& master, int& socket);
+void read(fd_set& master, int& socket);
+}
+
+interface IServer
+{
+void init(int port, std::function<void(std::string&)>);
+void listen_connections();
+}
+
+class Validator
+{
+enum {VALID_MESSAGE,BAD_MESSAGE}
+Result validate_and_parse(const std::string&, Message&)
+}
+
+
+class Storage
+{
+-std::vector<Item> collection;
+void store(Message&)
+void print_stats()
+void print_ordered()
+}
+
+class Message
+{
+std::string device;
+std::string body;
+Message(const std::string&, const std::string&)
+void set_device_id(const std::string&)
+void set_body(const std::string& message_body)
+const std::string& get_device_id()
+const std::string& get_body()
+}
+
+class Item
+{
+-std::string id
+-int cont
+
+bool operator < (const Item &b) const
+bool operator ==(const Item &b) const
+
+void new_item()
+const std::string get_id()
+const int get_count()
+
+}
+@enduml
