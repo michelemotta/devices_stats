@@ -22,9 +22,9 @@ Each time a client sends a request the total amount of messages is printed on st
 
 ## Class diagram
 
-![Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/michelemotta/devices_stats/main/class.iuml)
+[Class Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/michelemotta/devices_stats/main/class.iuml)
 
 ## Sequence diagram
 
-![Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/michelemotta/devices_stats/main/sequence.iuml)
+[Sequence diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/michelemotta/devices_stats/main/sequence.iuml)
 
